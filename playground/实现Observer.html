@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>实现Observer</title>
+</head>
+<body>
+
+
+<script>
+    var data = { name : "Mirror" };
+    observe(data);
+    data.name = "zhangSan";
+
+    function observe(data) {
+        if(!data || typeof data !== 'object') return;
+
+        Object.keys(data).forEach(function (key) {
+            defineReactive(data , key , data[key] );
+        })
+    }
+
+    function defineReactive(obj ,key ,val ) {
+        observe(val); // 递归监听子属性
+        Object.defineProperty(obj , key , {
+            enumerable:true, // 可枚举
+            configurable:false,
+            get:function () {
+                console.log( 'get 调用 ...' )
+                return val
+            },
+            set:function (newVal) {
+                console.log( 'set 调用 ...' , `${key}= ${newVal}` )
+                if(val === newVal) return ;
+                val = newVal
+            }
+        })
+    }
+</script>
+
+</body>
+</html>
