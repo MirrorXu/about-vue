@@ -7,40 +7,15 @@
 <body>
 <script>
 
-    var data = { name:"Mirror" , age:20 , gender: 1};
+  
 
 
+    var data = {name: '张三'};
+    consoole.log( data.name );
+    
     observe(data);
-    data.name = "xupegnlai"
-
-
-
-    // function observe(data) {
-    //     if(!data || typeof data !== 'object' ) return;
-    //     Object.keys(data).forEach(function (key) {
-    //         defineReactive(data , key , data[key])
-    //     })
-    // }
-    //
-    // function defineReactive(data , key , val) {
-    //     console.log( val )
-    //     Object.defineProperty( data , key ,{
-    //         enumerable:true ,
-    //         configurable:false,
-    //         get:function (val) {
-    //             console.log( "get被触发...");
-    //             return val
-    //         },
-    //         set:function (newVal) {
-    //             console.log( `set触发...`);
-    //         }
-    //     } )
-    // }
-
-
-    var data = {name: 'kindeng'};
-    observe(data);
-    data.name = 'dmq'; // 哈哈哈，监听到值变化了 kindeng --> dmq
+    
+    data.name = 'mirror'; // 哈哈哈，监听到值变化了 kindeng --> dmq
 
     function observe(data) {
         if (!data || typeof data !== 'object') {
