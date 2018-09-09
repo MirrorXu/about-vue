@@ -6,7 +6,7 @@
 
 
 ### 思路整理
-已经了解到vue是通过数据劫持的方式来做数据绑定的，其中最核心的方法便是通过`Object.defineProperty()`来实现对属性的劫持，达到监听数据变动的目的，无疑这个方法是本文中最重要、最基础的内容之一，如果不熟悉defineProperty，链接[这里](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)
+vue最核心的方法便是通过`Object.defineProperty()`来实现对属性的劫持，达到监听数据变动的目的，!!!!!!!【最重要、最基础】的内容之一，如果不熟悉defineProperty，链接[这里](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)
 整理了一下，要实现mvvm的双向绑定，就必须要实现以下几点：
 - 1、实现一个数据监听器Observer，能够对数据对象的所有属性进行监听，如有变动可拿到最新值并通知订阅者
 - 2、实现一个指令解析器Compile，对每个元素节点的指令进行扫描和解析，根据指令模板替换数据，以及绑定相应的更新函数
@@ -52,7 +52,9 @@ function defineReactive(data, key, val) {
 }
 
 ```
-这样我们已经可以监听每个数据的变化了，那么监听到变化之后就是怎么通知订阅者了，所以接下来我们需要实现一个消息订阅器，很简单，维护一个数组，用来收集订阅者，数据变动触发notify，再调用订阅者的update方法，代码改善之后是这样：
+
+这样已经可以监听每个数据的变化了，那么监听到变化之后就是怎么通知订阅者了，所以接下来需要实现一个消息订阅器，维护一个数组，用来收集订阅者（`watcher实例`），数据变动触发notify，再调用订阅者的update方法，代码改善之后是这样：
+
 ```javascript
 // ... 省略
 function defineReactive(data, key, val) {
@@ -73,6 +75,7 @@ function defineReactive(data, key, val) {
 function Dep() {
     this.subs = [];
 }
+
 Dep.prototype = {
     addSub: function(sub) {
         this.subs.push(sub);
@@ -82,10 +85,16 @@ Dep.prototype = {
             sub.update();
         });
     }
+	//...省略
 };
 ```
+
+
+
 谁是订阅者？怎么往订阅器添加订阅者？
-没错，上面的思路整理中我们已经明确订阅者应该是Watcher, 而且`var dep = new Dep();`是在 `defineReactive`方法内部定义的，所以想通过`dep`添加订阅者，就必须要在闭包内操作，所以我们可以在	`getter`里面动手脚：
+上面的思路整理中我们已经明确订阅者应该是Watcher, 而且`var dep = new Dep();`是在 `defineReactive`方法内部定义的，所以想通过`dep`添加订阅者，就必须要在闭包内操作，所以我们可以在	`getter`里面动手脚：
+
+
 ```javascript
 // Observer.js
 // ...省略
